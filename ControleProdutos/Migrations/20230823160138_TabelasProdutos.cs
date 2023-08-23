@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControleProdutos.Migrations
 {
     /// <inheritdoc />
-    public partial class CriandoTabelaProdutos : Migration
+    public partial class TabelasProdutos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,12 +17,12 @@ namespace ControleProdutos.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CodigoDeBarras = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CodigoDeBarras = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataDeValidade = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataDeRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Quantidade = table.Column<int>(type: "int", nullable: false),
-                    Valor = table.Column<double>(type: "float", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     NomeDaFoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Foto = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Ativo = table.Column<bool>(type: "bit", nullable: false)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControleProdutos.Migrations
 {
     [DbContext(typeof(BancoContext))]
-    [Migration("20230806165402_CriandoTabelaProdutos")]
-    partial class CriandoTabelaProdutos
+    [Migration("20230823160138_TabelasProdutos")]
+    partial class TabelasProdutos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,8 @@ namespace ControleProdutos.Migrations
 
                     b.Property<string>("CodigoDeBarras")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<DateTime>("DataDeRegistro")
                         .HasColumnType("datetime2");
@@ -59,8 +60,8 @@ namespace ControleProdutos.Migrations
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
-                    b.Property<double>("Valor")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 
