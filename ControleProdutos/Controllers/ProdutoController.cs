@@ -4,6 +4,7 @@ using ControleProdutos.Repositorio;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 
 namespace ControleProdutos.Controllers
@@ -50,8 +51,18 @@ namespace ControleProdutos.Controllers
         public IActionResult Criar(ProdutoModel produto)
         {
             ProdutoModel model = produto;
+
+            List<ValidationResult> results = new List<ValidationResult>();
+            ValidationContext context = new ValidationContext(model, null, null);
+
+            bool isValid = Validator.TryValidateObject( model, context, results, true);
+
+            if (!isValid)
+            {
+                return View(model);
+            }
             model.DataDeRegistro = DateTime.Now;
-            
+
             _produtoRepositorio.Adicionar(model);
             return RedirectToAction("Index");
         }
@@ -61,7 +72,7 @@ namespace ControleProdutos.Controllers
         {
             ProdutoModel model = produto;
             model.DataDeRegistro = produto.DataDeRegistro;
-            
+
             _produtoRepositorio.Atualizar(model);
             return RedirectToAction("Index");
         }

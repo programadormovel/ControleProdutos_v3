@@ -10,18 +10,17 @@
     var newFileName = "";
     var imagePath = "";
 
-    //if (IsPost)
-    //{
-    //    photo = WebImage.GetImageFromRequest();
-    //    if (photo != null)
-    //    {
-    //        newFileName = Guid.NewGuid().ToString() + "_" +
-    //            Path.GetFileName(photo.FileName);
-    //        imagePath = @"imagens\" + newFileName;
+    if (HttpMethods.IsPost(Context.Request.Method))
+        photo = WebImage.GetImageFromRequest();
+    if (photo != null)
+    {
+        newFileName = Guid.NewGuid().ToString() + "_" +
+            System.IO.Path.GetFileName(photo.FileName.ToString());
+        imagePath = @"imagens\" + newFileName;
 
-    //        photo.Save(@"~\" + imagePath);
-    //    }
-    //}
+        photo.Save(@"~\" + imagePath);
+    }
+}
 }
 
 <div class="text-center">
@@ -29,48 +28,58 @@
     <h1 class="display-4"> Cadastro de Produtos</h1>
 
     <form asp-controller="Produto" asp-action="Criar" method="post" class="col" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <label for="codigoDeBarras" class="form-label">Código de Barras</label>
             <input type="text" asp-for="CodigoDeBarras" class="form-control" id="codigoDeBarras" placeholder="Entre com o código de barras do produto.">
+            <span asp-validation-for="CodigoDeBarras" class="text-danger"></span>
         </div>
 
         <div class="row">
             <label for="descricao" class="form-label">Descrição</label>
             <input type="text" asp-for="Descricao" class="form-control" id="descricao" placeholder="Entre com a descrição do produto.">
+            <span asp-validation-for="Descricao" class="text-danger"></span>
         </div>
 
         <div class="row">
             <div class="col-sm-4">
                 <label for="dataDeValidade" class="form-label">Data de Validade</label>
                 <input type="date" asp-for="DataDeValidade" class="form-control" id="dataDeValidade" placeholder="Data de validade do produto.">
+                <span asp-validation-for="DataDeValidade" class="text-danger"></span>
             </div>
             <div class="col-sm-4">
                 <label for="quantidade" class="form-label">Quantidade</label>
                 <input type="number" asp-for="Quantidade" class="form-control" id="quantidade" placeholder="Quantidade do produto.">
+                <span asp-validation-for="Quantidade" class="text-danger"></span>
             </div>
             <div class="col-sm-4">
                 <label for="valor" class="form-label">Valor</label>
                 <input type="text" asp-for="Valor" class="form-control" id="valor" placeholder="Valor do produto.">
+                <span asp-validation-for="Valor" class="text-danger"></span>
             </div>
         </div>
         <div class="row text-start m-3 p-2">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" asp-for="Ativo" id="ativo">
+                <input class="form-check-input" type="checkbox" asp-for="Ativo" id="ativo" checked>
                 <label class="form-check-label" for="ativo">
                     Ativo
                 </label>
+                <span asp-validation-for="Ativo" class="text-danger"></span>
             </div>
         </div>
-       
-            <div class="row">
+        <div class="row">
             <label for="nomeDaFoto" class="form-label">Foto</label>
             <input type="file" accept="image/png, image/jpeg" asp-for="NomeDaFoto" class="form-control" id="nomeDaFoto" placeholder="Busque a foto do produto." name="Anexo">
-            <input class="form-control" type="image" src="@imagePath" alt="Foto" width="50px" height="200px">
+            
         </div>
-        
-        <br/>
+
+        <br />
         <button type="submit" class="btn btn-primary btn-block">Adicionar</button>
         <br />
+        @if(imagePath != "")
+        {
+            <input class="form-control" type="image" src="@imagePath" alt="Foto" width="50" height="200">
+        }
         <br />
         <br />
         <a class="btn btn-secondary btn-block" asp-controller="Produto" asp-action="Index" role="button">Voltar</a>

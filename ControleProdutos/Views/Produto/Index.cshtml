@@ -1,6 +1,7 @@
 ﻿@model List<ProdutoModel>
 @{
     ViewData["Title"] = "Produtos";
+    var Erro = "";
 }
 
 <div class="text-center">
@@ -8,6 +9,7 @@
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
         <a class="btn btn-success" role="button" asp-controller="Produto" asp-action="Criar">Adicionar novo produto</a>
     </div>
+    <p>@Erro</p>
     <br />
     <h1 class="display-4"> Lista de Produtos</h1>
     <table class="table caption-top">
@@ -25,7 +27,10 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model != null && Model.Any())
+            @{
+
+            
+            if (Model != null && Model.Any())
             {
                 foreach (ProdutoModel produto in Model)
                 {
@@ -47,6 +52,10 @@
                         </td>
                     </tr>
                 }
+            } else
+            {
+                Erro = "Algum erro aconteceu!";
+            }
             }
         </tbody>
     </table>

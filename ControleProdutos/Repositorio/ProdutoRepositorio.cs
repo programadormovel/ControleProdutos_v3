@@ -1,5 +1,6 @@
 ﻿using ControleProdutos.Data;
 using ControleProdutos.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ControleProdutos.Repositorio
 {
@@ -19,6 +20,12 @@ namespace ControleProdutos.Repositorio
 
         public ProdutoModel Adicionar(ProdutoModel produto)
         {
+            // Validações
+            if(produto.CodigoDeBarras.IsNullOrEmpty()) {
+                Console.WriteLine("Codigo de barras requerido");
+                return null;
+            }
+
             _bancoContext.Produtos.Add(produto);
             _bancoContext.SaveChanges();
 
