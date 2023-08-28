@@ -50,7 +50,7 @@ namespace ControleProdutos.Repositorio
             produtoDB.Descricao = produto.Descricao;
             produtoDB.CodigoDeBarras = produto.CodigoDeBarras;
             produtoDB.DataDeValidade = produto.DataDeValidade;
-            produtoDB.DataDeRegistro = produto.DataDeRegistro;
+            //produtoDB.DataDeRegistro = produto.DataDeRegistro;
             produtoDB.Valor = produto.Valor;
             produtoDB.NomeDaFoto = produto.NomeDaFoto;
             produtoDB.Foto = produto.Foto;

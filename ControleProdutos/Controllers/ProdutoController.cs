@@ -1,21 +1,23 @@
-﻿using ControleProdutos.Data;
-using ControleProdutos.Models;
+﻿using ControleProdutos.Models;
 using ControleProdutos.Repositorio;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
+using System.IO;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace ControleProdutos.Controllers
 {
     public class ProdutoController : Controller
     {
+        private IHostingEnvironment Environment;
 
         private readonly IProdutoRepositorio _produtoRepositorio;
-        public ProdutoController(IProdutoRepositorio produtoRepositorio)
+
+        public ProdutoController(IProdutoRepositorio produtoRepositorio, 
+            IHostingEnvironment _environment)
         {
             _produtoRepositorio = produtoRepositorio;
+            Environment = _environment;
         }
 
         public IActionResult Index()
@@ -48,10 +50,11 @@ namespace ControleProdutos.Controllers
         }
 
         [HttpPost]
-        public IActionResult Criar(ProdutoModel produto)
+        public IActionResult Criar(ProdutoModel produto, IFormFile? imagemCarregada)
         {
             ProdutoModel model = produto;
 
+            // validações 
             List<ValidationResult> results = new List<ValidationResult>();
             ValidationContext context = new ValidationContext(model, null, null);
 
@@ -63,6 +66,24 @@ namespace ControleProdutos.Controllers
             }
             model.DataDeRegistro = DateTime.Now;
 
+            // Carregamento de imagem
+            string wwwPath = this.Environment.WebRootPath;
+            string contentPath = this.Environment.ContentRootPath;
+            string path = Path.Combine(wwwPath, "Uploads");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            string fileName = Path.GetFileName(imagemCarregada!.FileName);
+            using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+            {
+                imagemCarregada.CopyTo(stream);
+                model.NomeDaFoto = fileName;
+            }
+
+            model.Foto = Util.ReadFully2(Path.Combine(path, fileName));
+
             _produtoRepositorio.Adicionar(model);
             return RedirectToAction("Index");
         }
@@ -72,9 +93,19 @@ namespace ControleProdutos.Controllers
         {
             ProdutoModel model = produto;
             model.DataDeRegistro = produto.DataDeRegistro;
+            model.Descricao.Replace("-", "");
 
             _produtoRepositorio.Atualizar(model);
             return RedirectToAction("Index");
+        }
+
+
+
+        [Route("/Produto/CarregarImagem")]
+        public IActionResult CarregarImagem(string rota)
+        {
+
+            return View();
         }
 
     }

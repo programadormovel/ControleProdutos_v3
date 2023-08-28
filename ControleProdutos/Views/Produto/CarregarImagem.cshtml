@@ -1,0 +1,33 @@
+﻿@page
+@model ProdutoModel
+@using Microsoft.Ajax.Utilities;
+@{
+     string? imagePath = "";
+    if ((object) Request.Form["photoChoice"] != null)
+    {
+        imagePath = @"~/imagens/" + Convert.ToString(Request.Form["photoChoice"]);
+    }
+}
+
+<div>
+
+    <form method="post" action="" enctype="multipart/form-data">
+        <div>
+            I want to see:
+            <select name="photoChoice">
+                <option value="image1.jpg">Photo 1</option>
+                <option value="image2.jpg">Photo 2</option>
+                <option value="image3.jpg">Photo 3</option>
+            </select>
+            &nbsp;
+            <input type="submit" value="Submit" />
+        </div>
+        <div style="padding:10px;">
+            @if (imagePath != "")
+            {
+                <img src="@imagePath" alt="Sample Image" width="300" />
+            }
+        </div>
+    </form>
+
+</div>

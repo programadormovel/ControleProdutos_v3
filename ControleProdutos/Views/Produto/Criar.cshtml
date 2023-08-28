@@ -6,21 +6,29 @@
 @{
     ViewData["Title"] = "Cadastro de Produtos";
 
-    WebImage photo = null;
+    var imagePath = "/imagens/caverninha.jpg";
+    WebImage? photo = null;
     var newFileName = "";
-    var imagePath = "";
+    var caminhoServidor = "~/";
+    IFormFile foto;
 
-    if (HttpMethods.IsPost(Context.Request.Method))
-        photo = WebImage.GetImageFromRequest();
-    if (photo != null)
-    {
-        newFileName = Guid.NewGuid().ToString() + "_" +
-            System.IO.Path.GetFileName(photo.FileName.ToString());
-        imagePath = @"imagens\" + newFileName;
+    //if (HttpMethods.IsPost(Context.Request.Method))
+    //{
+    //    string caminhoParaSalvarImagem = caminhoServidor + "imagem/";
+    //    string novoNomeParaImagem = Guid.NewGuid().ToString() + "_" + Model.NomeDaFoto;
+    //    if (!Directory.Exists(caminhoParaSalvarImagem))
+    //    {
+    //        Directory.CreateDirectory(caminhoParaSalvarImagem);
+    //    }
 
-        photo.Save(@"~\" + imagePath);
-    }
-}
+    //    imagePath = caminhoParaSalvarImagem + novoNomeParaImagem;
+
+    //    using (var stream = System.IO.File.Create(caminhoParaSalvarImagem + novoNomeParaImagem))
+    //    {
+    //       Model.Foto.CopyTo(stream);
+    //    }
+    //}
+
 }
 
 <div class="text-center">
@@ -28,7 +36,7 @@
     <h1 class="display-4"> Cadastro de Produtos</h1>
 
     <form asp-controller="Produto" asp-action="Criar" method="post" class="col" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="row">
             <label for="codigoDeBarras" class="form-label">Código de Barras</label>
             <input type="text" asp-for="CodigoDeBarras" class="form-control" id="codigoDeBarras" placeholder="Entre com o código de barras do produto.">
@@ -49,7 +57,9 @@
             </div>
             <div class="col-sm-4">
                 <label for="quantidade" class="form-label">Quantidade</label>
-                <input type="number" asp-for="Quantidade" class="form-control" id="quantidade" placeholder="Quantidade do produto.">
+                <input type="number" asp-for="Quantidade" class="form-control" id="quantidade" placeholder="Quantidade do produto."
+                    data-val="true" data-val-number="Quantidade não informada"
+                >
                 <span asp-validation-for="Quantidade" class="text-danger"></span>
             </div>
             <div class="col-sm-4">
@@ -67,19 +77,21 @@
                 <span asp-validation-for="Ativo" class="text-danger"></span>
             </div>
         </div>
+
         <div class="row">
-            <label for="nomeDaFoto" class="form-label">Foto</label>
-            <input type="file" accept="image/png, image/jpeg" asp-for="NomeDaFoto" class="form-control" id="nomeDaFoto" placeholder="Busque a foto do produto." name="Anexo">
+            <label for="imagemCarregada" class="form-label">Foto</label>
+            <input type="file" accept="image/png, image/jpeg" class="form-control" id="imagemCarregada" placeholder="Busque a foto do produto." name="imagemCarregada">
+
+           @* <span asp-validation-for="NomeDaFoto" class="text-danger"></span>
+                <input class="form-control" type="image" src=@imagePath alt="Foto" width="100" height="100" name="Foto">
+                <span asp-validation-for="Foto" class="text-danger"></span>*@
             
         </div>
 
         <br />
         <button type="submit" class="btn btn-primary btn-block">Adicionar</button>
         <br />
-        @if(imagePath != "")
-        {
-            <input class="form-control" type="image" src="@imagePath" alt="Foto" width="50" height="200">
-        }
+
         <br />
         <br />
         <a class="btn btn-secondary btn-block" asp-controller="Produto" asp-action="Index" role="button">Voltar</a>
